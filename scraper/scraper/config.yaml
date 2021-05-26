@@ -1,0 +1,9 @@
+facebook:
+    login_page:
+        login_form_id: login_form
+        login_form_submit_button_attr: name
+        login_form_submit_button_val: login
+    after_login_page:
+        save_login_form_xpath: //form[@action="/login/device-based/update-nonce/"]
+        save_login_html_attr: value
+        save_login_html_value: OK

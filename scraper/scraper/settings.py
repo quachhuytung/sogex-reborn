@@ -14,10 +14,10 @@ NEWSPIDER_MODULE = 'scraper.spiders'
 
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-#USER_AGENT = 'scraper (+http://www.yourdomain.com)'
+USER_AGENT = 'Nokia206/2.0 (04.51) Profile/MIDP-2.1 Configuration/CLDC-1.1 Opera/9.80 (J2ME/MIDP; Opera Mini/4.1.22687/37.8069; U; ru; Nokia206) Presto/2.12.423 Version/12.16 UCBrowser/9.5.0.449 U2/Mobile Global Browser UNTRUSTED/1.0'
 
 # Obey robots.txt rules
-ROBOTSTXT_OBEY = True
+ROBOTSTXT_OBEY = False
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 #CONCURRENT_REQUESTS = 32
@@ -31,7 +31,7 @@ ROBOTSTXT_OBEY = True
 #CONCURRENT_REQUESTS_PER_IP = 16
 
 # Disable cookies (enabled by default)
-#COOKIES_ENABLED = False
+COOKIES_ENABLED = True
 
 # Disable Telnet Console (enabled by default)
 #TELNETCONSOLE_ENABLED = False
