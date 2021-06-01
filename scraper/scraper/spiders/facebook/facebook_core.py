@@ -42,8 +42,8 @@ class FacebookCore(scrapy.Spider):
                 clickdata={
                     config_data['facebook']['after_login_page']['save_login_html_attr']: \
                         config_data['facebook']['after_login_page']['save_login_html_value']
-                }, callback=self.parse)
+                }, callback=self.crawl_target)
 
 
-    def parse(self, response):
-        inspect_response(response, self)
+    def crawl_target(self, response):
+        pass
