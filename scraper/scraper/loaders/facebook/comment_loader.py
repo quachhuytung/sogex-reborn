@@ -12,3 +12,5 @@ class CommentLoader(ItemLoader):
     author_info_out = Identity()
     type_out = TakeFirst()
     post_id_out = TakeFirst()
+    author_name_out = TakeFirst()
+    author_url_out = TakeFirst()

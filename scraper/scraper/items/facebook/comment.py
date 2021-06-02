@@ -5,5 +5,6 @@ class Comment(Item):
     id = scrapy.Field()
     type = scrapy.Field()
     content = scrapy.Field()
-    author_info = scrapy.Field()
+    author_name = scrapy.Field()
+    author_url = scrapy.Field()
     post_id = scrapy.Field()
