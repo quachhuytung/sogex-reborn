@@ -1,9 +1,8 @@
 import scrapy
 from scrapy.shell import inspect_response
 
-
 from scraper.config import config_data
-
+from scraper.signals import log_cookie_signal, handle_log_cookie
 
 class FacebookCore(scrapy.Spider):
     name = 'facebook-core'
@@ -17,6 +16,12 @@ class FacebookCore(scrapy.Spider):
         ###             END PARSING ARGUMENTS                   ###
 
         super(FacebookCore, self).__init__(*args, **kwargs)
+
+    @classmethod
+    def from_crawler(cls, crawler, *args, **kwargs):
+        spider = super(FacebookCore, cls).from_crawler(crawler, *args, **kwargs)
+        crawler.signals.connect(handle_log_cookie, log_cookie_signal)
+        return spider
 
     def start_requests(self):
         for url in self.start_urls:
@@ -43,7 +48,3 @@ class FacebookCore(scrapy.Spider):
                     config_data['facebook']['after_login_page']['save_login_html_attr']: \
                         config_data['facebook']['after_login_page']['save_login_html_value']
                 }, callback=self.crawl_target)
-
-
-    def crawl_target(self, response):
-        pass
