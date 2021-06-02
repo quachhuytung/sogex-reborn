@@ -5,7 +5,7 @@ from scrapy.linkextractors import LinkExtractor
 from . import FacebookCore
 from scraper.config import config_data
 from scraper.loaders.facebook import PostLoader
-from scraper.utils.facebook import get_cookies
+from scraper.utils.cookies import get_cookies
 
 
 class FacebookFanpageSpider(FacebookCore):
