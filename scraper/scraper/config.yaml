@@ -15,3 +15,9 @@ facebook:
         post_page:
             id_xpath: //div[@id='m_story_permalink_view']/div/div/@data-ft
             contents_container_xpath: (//div[@data-ft='{"tn":"*s"}'])[1]//*/text()
+    fanpage:
+        timeline_page:
+            post_link_xpath: //div[@data-ft='{"tn":"*W"}']/div[2]/a[1]
+        post_page:
+            id_xpath: //div[@id='m_story_permalink_view']/div/div/@data-ft
+            contents_container_xpath: (//div[@data-ft='{"tn":"*s"}'])[1]//*/text()

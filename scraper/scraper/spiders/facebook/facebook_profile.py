@@ -1,5 +1,4 @@
 import scrapy
-from scrapy.shell import inspect_response
 from scrapy.linkextractors import LinkExtractor
 
 from . import FacebookCore
@@ -13,11 +12,11 @@ class FacebookProfileSpider(FacebookCore):
 
     def __init__(self, *args, **kwargs):
         super(self.__class__, self).__init__(*args, **kwargs)
-        self.fanpage_url = kwargs['profile_url']
+        self.profile_url = kwargs['profile_url']
     
     @get_cookies
     def crawl_target(self, response):
-        yield scrapy.Request(self.fanpage_url, callback=self.parse_meta_info)
+        yield scrapy.Request(self.profile_url, callback=self.parse_meta_info)
 
     def parse_meta_info(self, response):
         profile_content_link_extractor = LinkExtractor(restrict_css=\
