@@ -7,7 +7,7 @@ facebook:
         save_login_form_xpath: //form[@action="/login/device-based/update-nonce/"]
         save_login_html_attr: value
         save_login_html_value: OK
-    fanpage:
+    profile_page:
         meta_info_page:
             timeline_link_xpath: .basicNavItems.mfsm.fcg > a:first-child
         timeline_page:
