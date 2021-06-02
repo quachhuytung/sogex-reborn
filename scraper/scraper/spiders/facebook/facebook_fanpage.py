@@ -5,11 +5,13 @@ from scrapy.linkextractors import LinkExtractor
 from . import FacebookCore
 from scraper.config import config_data
 from scraper.loaders.facebook import PostLoader
+from scraper.utils.facebook import get_cookies
 
 
 class FacebookFanpageSpider(FacebookCore):
     name = 'facebook-fanpage'
-
+    
+    @get_cookies
     def crawl_target(self, response):
         yield scrapy.Request('https://mbasic.facebook.com/ChuyencuaHaNoi', callback=self.parse_meta_info)
 
