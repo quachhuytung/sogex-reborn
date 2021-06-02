@@ -34,7 +34,9 @@ class FacebookProfileSpider(FacebookCore):
                         'comment_list_n_times' : 1
                     })
         if timeline_n_times < self.max_scroll_timeline:
-            more_posts_link_container = LinkExtractor(restrict_text='Hiển thị thêm').extract_links(response)
+            more_posts_link_container = LinkExtractor(restrict_text=\
+                config_data['facebook']['fanpage']['timeline_page']['more_post_restrict_text'])\
+                    .extract_links(response)
             if more_posts_link_container:
                 yield scrapy.Request(more_posts_link_container[0].url, callback=self.crawl_timeline, cb_kwargs={
                         'timeline_n_times': timeline_n_times + 1
@@ -51,14 +53,12 @@ class FacebookProfileSpider(FacebookCore):
             yield post_loader.load_item()
 
         post_id = post_loader.get_output_value('id')
-
-        comment_container_dynamic_xpath = '//div[@id=$postIdContainer]/div/div[5]/div'
-        comments_container = response.xpath(comment_container_dynamic_xpath, 
+        comments_container = response.xpath(config_data['facebook']['fanpage']['post_page']['comment_container_dynamic_xpath'], 
                 postIdContainer=f'ufi_{post_id}')
 
         if comment_list_n_times < self.max_scroll_comment:
-            next_comment_page_dynamic_xpath = '//*[@id="see_next_{post_id}"]'
-            next_comment_page_url_container = LinkExtractor(restrict_xpaths=next_comment_page_dynamic_xpath\
+            next_comment_page_url_container = LinkExtractor(\
+                restrict_xpaths=config_data['facebook']['fanpage']['post_page']['next_comment_page_dynamic_xpath']\
                     .format(post_id=post_id)).extract_links(response)
 
             if next_comment_page_url_container:
@@ -70,8 +70,15 @@ class FacebookProfileSpider(FacebookCore):
 
         for comment_container in comments_container[:-1]: # last one is for next page
             comment_loader = CommentLoader(response=response)
-            comment_loader.add_value('id', comment_container.xpath('./@id').get())
-            comment_loader.add_value('content', comment_container.xpath('./div/div[1]//text()').getall())
+            comment_loader.add_value('id', comment_container.xpath(\
+                config_data['facebook']['fanpage']['post_page']['comment_id_relative_xpath']).get())
+            comment_loader.add_value('content', comment_container.xpath(\
+                config_data['facebook']['fanpage']['post_page']['comment_content_relative_xpath'])\
+                    .getall())
             comment_loader.add_value('post_id', post_id)
             comment_loader.add_value('type', 'comment')
+            comment_loader.add_value('author_name', \
+                comment_container.xpath(config_data['facebook']['fanpage']['post_page']['comment_author_name_relative_xpath']).get())
+            comment_loader.add_value('author_url', \
+                comment_container.xpath(config_data['facebook']['fanpage']['post_page']['comment_author_url_relative_xpath']).get())
             yield comment_loader.load_item()
