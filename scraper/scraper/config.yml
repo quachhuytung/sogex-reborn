@@ -28,4 +28,6 @@ facebook:
             comment_content_relative_xpath: './div/div[1]//text()'
             comment_author_name_relative_xpath: './div/h3/a/text()'
             comment_author_url_relative_xpath: './div/h3/a/@href'
-
+        reaction_page:
+            labels_xpath: '//table/tbody/tr/td/div/div/a[position()>1]/img/@alt'
+            data_xpath: '//table/tbody/tr/td/div/div/a[position()>1]/span/text()'
