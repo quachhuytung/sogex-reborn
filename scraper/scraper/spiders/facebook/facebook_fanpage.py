@@ -4,7 +4,7 @@ from scrapy.shell import inspect_response
 
 from . import FacebookCore
 from scraper.config import config_data
-from scraper.loaders.facebook import PostLoader, CommentLoader
+from scraper.loaders.facebook import PostLoader, CommentLoader, ReactionLoader
 from scraper.utils.cookies import get_cookies
 
 
@@ -56,18 +56,6 @@ class FacebookProfileSpider(FacebookCore):
         comments_container = response.xpath(config_data['facebook']['fanpage']['post_page']['comment_container_dynamic_xpath'], 
                 postIdContainer=f'ufi_{post_id}')
 
-        if comment_list_n_times < self.max_scroll_comment:
-            next_comment_page_url_container = LinkExtractor(\
-                restrict_xpaths=config_data['facebook']['fanpage']['post_page']['next_comment_page_dynamic_xpath']\
-                    .format(post_id=post_id)).extract_links(response)
-
-            if next_comment_page_url_container:
-                yield scrapy.Request(next_comment_page_url_container[0].url, callback=self.parse_post_content, 
-                        cb_kwargs = {
-                            'comment_list_n_times' : comment_list_n_times + 1
-                        }
-                )
-
         for comment_container in comments_container[:-1]: # last one is for next page
             comment_loader = CommentLoader(response=response)
             comment_loader.add_value('id', comment_container.xpath(\
@@ -82,3 +70,35 @@ class FacebookProfileSpider(FacebookCore):
             comment_loader.add_value('author_url', \
                 comment_container.xpath(config_data['facebook']['fanpage']['post_page']['comment_author_url_relative_xpath']).get())
             yield comment_loader.load_item()
+        
+        reaction_xpath = f'//div[@id="sentence_{post_id}"]'
+        reaction_link_container = LinkExtractor(restrict_xpaths=reaction_xpath).extract_links(response)
+
+        if reaction_link_container:
+            yield scrapy.Request(reaction_link_container[0].url, callback=self.parse_reaction_page, cb_kwargs={
+                'obj_id': post_id,
+                'obj_type': 'post'
+            })
+
+        if comment_list_n_times < self.max_scroll_comment:
+            next_comment_page_url_container = LinkExtractor(\
+                restrict_xpaths=config_data['facebook']['fanpage']['post_page']['next_comment_page_dynamic_xpath']\
+                    .format(post_id=post_id)).extract_links(response)
+
+            if next_comment_page_url_container:
+                yield scrapy.Request(next_comment_page_url_container[0].url, callback=self.parse_post_content, 
+                        cb_kwargs = {
+                            'comment_list_n_times' : comment_list_n_times + 1
+                        }
+                )
+    
+    def parse_reaction_page(self, response, obj_id, obj_type):
+        reactions_label = response.xpath(config_data['facebook']['fanpage']['reaction_page']['labels_xpath']).getall()
+        reactions_data = response.xpath(config_data['facebook']['fanpage']['reaction_page']['data_xpath']).getall()
+
+        reaction_loader = ReactionLoader(response=response)
+        reaction_loader.add_value('obj_id', obj_id)
+        reaction_loader.add_value('obj_type', obj_type)
+        reaction_loader.add_value('stats', dict(zip(reactions_label, reactions_data)))
+
+        yield reaction_loader.load_item()
