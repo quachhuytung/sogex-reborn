@@ -8,3 +8,4 @@ class Comment(Item):
     author_name = scrapy.Field()
     author_url = scrapy.Field()
     post_id = scrapy.Field()
+    email = scrapy.Field()

@@ -1,3 +1,7 @@
+## TODO ##
+1. Fanpage, profile thêm phần reply
+2. Check lại chuyển trang trên post + reply + comment
+
 Cách chạy Project
 - Thông tin chung (đăng nhập facebook)
     - login_type:
