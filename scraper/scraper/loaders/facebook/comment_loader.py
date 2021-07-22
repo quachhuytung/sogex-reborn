@@ -15,6 +15,9 @@ def get_email(value):
     else:
         return 'NOT FOUND'
 
+def add_fb_domain(value):
+    return 'facebook.com' + value
+
 class CommentLoader(ItemLoader):
     default_item_class = Comment
     id_out = TakeFirst()
@@ -23,5 +26,5 @@ class CommentLoader(ItemLoader):
     type_out = TakeFirst()
     post_id_out = TakeFirst()
     author_name_out = TakeFirst()
-    author_url_out = TakeFirst()
+    author_url_out = Compose(TakeFirst(), add_fb_domain)
     email_out = Compose(Join(''), get_email)

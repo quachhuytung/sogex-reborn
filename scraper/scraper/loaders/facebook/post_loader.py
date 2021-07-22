@@ -12,10 +12,13 @@ def get_post_id(value, loader_context):
     else:
         return value['mf_story_key']
 
+def add_fb_domain(value):
+    return 'facebook.com' + value
+
 class PostLoader(ItemLoader):
     default_item_class = Post
     id_out = Compose(TakeFirst(), json.loads, get_post_id)
     content_out = Join()
     type_out = TakeFirst()
     author_name_out = TakeFirst()
-    author_url_out = TakeFirst()
+    author_url_out = Compose(TakeFirst(), add_fb_domain)
